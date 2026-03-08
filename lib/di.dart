@@ -17,7 +17,7 @@ import 'features/collect/domain/usecases/submit_collect_usecase.dart';
 import 'features/collect/presentation/providers/collect_provider.dart';
 
 /// ─── Basculer ici entre mock et prod ─────────────────────────────────────────
-const bool kMockMode = true; // false → appels API réels
+const bool kMockMode = false; // false → appels API réels
 /// ─────────────────────────────────────────────────────────────────────────────
 
 final _secureStorage = SecureStorageService();

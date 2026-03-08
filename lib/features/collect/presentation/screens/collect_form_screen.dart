@@ -52,6 +52,17 @@ class _CollectFormScreenState extends ConsumerState<CollectFormScreen> {
     'Autre',
   ];
 
+  static const _zones = [
+    'Cocody',
+    'Angré',
+    'Riviera',
+    'Koumassi',
+    'Marcory',
+    'Bingerville',
+    'Port bouet',
+    'Faya',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -169,7 +180,10 @@ class _CollectFormScreenState extends ConsumerState<CollectFormScreen> {
       immatriculation: _immatCtrl.text.trim(),
       lieuProspection: _lieuCtrl.text.trim(),
       assuranceActuel: _assuranceCtrl.text.trim(),
-      dateEcheance: _dateEcheanceCtrl.text.trim(),
+      dateEcheance: _dateEcheanceCtrl.text.trim().isNotEmpty
+          ? DateFormat('yyyy-MM-dd').format(
+              DateFormat('dd/MM/yyyy').parse(_dateEcheanceCtrl.text.trim()))
+          : '',
       latitude: _latitude ?? 0.0,
       longitude: _longitude ?? 0.0,
       carteGrisePath: _carteGrisePath,
@@ -199,6 +213,7 @@ class _CollectFormScreenState extends ConsumerState<CollectFormScreen> {
           ),
         );
         ref.read(collectProvider.notifier).reset();
+        ref.invalidate(collectsListProvider);
         Navigator.of(context).pop();
       }
       if (state is CollectSubmitError) {
@@ -308,10 +323,14 @@ class _CollectFormScreenState extends ConsumerState<CollectFormScreen> {
                 icon: Icons.directions_car_outlined),
             const SizedBox(height: 12),
 
-            _buildTextField(
-              controller: _lieuCtrl,
-              label: 'Lieu de prospection',
-              validator: _required,
+            DropdownButtonFormField<String>(
+              value: _lieuCtrl.text.isEmpty ? null : _lieuCtrl.text,
+              decoration: const InputDecoration(labelText: 'Lieu de prospection'),
+              items: _zones
+                  .map((z) => DropdownMenuItem(value: z, child: Text(z)))
+                  .toList(),
+              onChanged: (v) => setState(() => _lieuCtrl.text = v!),
+              validator: (v) => v == null ? 'Champ requis' : null,
             ),
             const SizedBox(height: 14),
             _buildTextField(
